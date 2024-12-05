@@ -1,0 +1,35 @@
+name: 'Get Package Ids'
+description: 'This action allows to get GitHub package Ids for specified docker images and tags'
+inputs:
+  component-name:
+    description: 'The name of docker image'
+    required: true
+    default: ''
+  component-tag:
+    description: 'Tag of docker image'
+    required: true
+    default: 'none'
+  organization-name:
+    description: 'The name of organization'
+    required: true
+    default: 'netcracker'
+  access-token:
+    description: 'GitHub registry access token'
+    required: true
+    default: ''
+outputs:
+  ids-for-delete:
+    description: "IDs for delete"
+    value: ${{ steps.run-script.outputs.ids-for-delete }}
+runs:
+  using: "composite"
+  steps:
+    - name: Run Script
+      id: run-script
+      run: ${{ github.action_path }}/scripts/packages-for-delete.sh
+      shell: bash
+      env:
+        ORGANIZATION_NAME: ${{ inputs.organization-name }}
+        COMPONENT_NAME: ${{ inputs.component-name }}
+        COMPONENT_TAG: ${{ inputs.component-tag }}
+        ACCESS_TOKEN: ${{ inputs.access-token }}
